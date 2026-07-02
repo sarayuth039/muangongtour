@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เมืองโอ่งทัวร์ | บริการให้เช่ารถบัสเหมาคัน ท่องเที่ยว สัมมนา จังหวัดราชบุรี</title>
+  <meta name="description" content="บริการให้เช่ารถบัสปรับอากาศ VIP เหมาคัน รถสองชั้น รถบัสชั้นเดียว มินิบัส ในจังหวัดราชบุรี ปลอดภัย ท่องเที่ยว สัมมนา ดูงาน บริการเป็นกันเอง ติดต่อเมืองโอ่งทัวร์">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Admin Mode Status Bar (Hidden by default) -->
+  <div class="admin-topbar" id="admin-topbar">
+    <div class="container admin-topbar-flex">
+      <div class="admin-topbar-status">
+        <span class="admin-badge">ADMIN MODE</span>
+        <span>ระบบจัดการหลังบ้าน: คุณสามารถ เพิ่ม แก้ไข หรือลบข้อมูลสินค้าและที่เที่ยวได้</span>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <button class="admin-logout-btn" style="background-color: var(--accent); color: var(--primary);" onclick="openAdminSettings()">⚙️ ตั้งค่าระบบ/ซิงค์คลาวด์</button>
+        <button class="admin-logout-btn" onclick="logoutAdmin()">ออกจากระบบ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Premium Header -->
+  <header id="main-header">
+    <div class="container navbar">
+      <div class="logo-container">
+        <div class="logo-icon">ม</div>
+        <div class="logo-text">
+          <span class="logo-title">เมืองโอ่งทัวร์</span>
+          <span class="logo-tagline">MUANG ONG TOUR</span>
+        </div>
+      </div>
+      
+      <nav>
+        <ul class="nav-menu" id="nav-menu">
+          <li><a href="#hero" class="nav-link">หน้าแรก</a></li>
+          <li><a href="#buses" class="nav-link">อัลบั้มรถบัสของเรา</a></li>
+          <li><a href="#portfolio" class="nav-link">ผลงานของเรา</a></li>
+          <li><a href="#attractions" class="nav-link">แนะนำที่เที่ยว</a></li>
+          <li><a href="#estimator" class="nav-link">คำนวณค่าเดินทาง</a></li>
+          <li><a href="#contact" class="nav-link">ติดต่อเรา</a></li>
+          <li><a href="#" class="nav-link nav-admin-link" id="nav-admin-btn" onclick="openAdminSettings(); return false;">🔓 สำหรับแอดมิน</a></li>
+        </ul>
+      </nav>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="hero-content">
+        <span class="hero-tag">ห้างหุ้นส่วนจำกัด เมืองโอ่งทัวร์ (ราชบุรี)</span>
+        <h1 class="hero-title">เดินทางอุ่นใจ ไปกับ <span>เมืองโอ่งทัวร์</span></h1>
+        <p class="hero-desc">บริการให้เช่ารถบัสปรับอากาศ VIP เหมาคัน นำเที่ยวทั่วไทย สัมมนา ศึกษาดูงาน และงานพิธีต่างๆ ด้วยรถบัสสภาพดีเยี่ยม พนักงานขับรถชำนาญเส้นทาง ปลอดภัยทุกการเดินทาง</p>
+        <div class="hero-btns">
+          <a href="#estimator" class="btn btn-primary">คำนวณราคาประเมิน</a>
+          <a href="#buses" class="btn btn-secondary">เลือกชมรถบัสของเรา</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Buses Gallery / Album Section -->
+  <section class="section-padding" id="buses">
+    <div class="container">
+      <h2 class="section-title">รถบัสในอัลบั้มของเรา</h2>
+      <p class="section-subtitle">กดเข้ามาชมรายละเอียดรถแต่ละคัน ทั้งยี่ห้อ ขนาดที่นั่ง และระบบเครื่องยนต์ เพื่อประกอบการตัดสินใจเลือกใช้บริการ</p>
+      
+      <!-- Admin Create Controls -->
+      <div class="admin-controls" id="admin-bus-controls">
+        <button class="admin-btn-add" onclick="openAddModal('bus')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          เพิ่มรถบัสใหม่ในอัลบั้ม
+        </button>
+      </div>
+
+      <div class="bus-grid" id="bus-grid">
+        <!-- Rendered Dynamically from app.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Portfolio Section -->
+  <section class="section-padding" id="portfolio" style="background-color: var(--bg-white)">
+    <div class="container">
+      <h2 class="section-title">ประวัติผลงานและความประทับใจ</h2>
+      <p class="section-subtitle">ภาพความประทับใจจากลูกค้าที่เลือกเช่าเหมาคันรถบัสเมืองโอ่งทัวร์ไปท่องเที่ยว สัมมนา และทำกิจกรรมร่วมกัน</p>
+      
+      <!-- Admin Create Controls -->
+      <div class="admin-controls" id="admin-portfolio-controls">
+        <button class="admin-btn-add" onclick="openAddModal('portfolio')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          เพิ่มประวัติผลงานใหม่
+        </button>
+      </div>
+
+      <div class="portfolio-grid" id="portfolio-grid">
+        <!-- Rendered Dynamically from app.js -->
+      </div>
+
+      <!-- Toggle Container for Show More/Less buttons -->
+      <div class="toggle-btn-container" id="portfolio-toggle-container">
+        <!-- Rendered Dynamically from app.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Attractions Recommendation Section -->
+  <section class="section-padding" id="attractions">
+    <div class="container">
+      <h2 class="section-title">แนะนำสถานที่ท่องเที่ยวเด่น</h2>
+      <p class="section-subtitle">วางแผนการเดินทางท่องเที่ยวแบบเหมาคันไปกับเรา กับแหล่งท่องเที่ยวแนะนำยอดนิยมในจังหวัดใกล้เคียง</p>
+      
+      <!-- Province Navigation Tabs -->
+      <div class="tabs-container">
+        <button class="tab-btn active" data-province="all" onclick="filterAttractions('all')">ทั้งหมด</button>
+        <button class="tab-btn" data-province="ratchaburi" onclick="filterAttractions('ratchaburi')">ราชบุรี</button>
+        <button class="tab-btn" data-province="kanchanaburi" onclick="filterAttractions('kanchanaburi')">กาญจนบุรี</button>
+        <button class="tab-btn" data-province="phetchaburi" onclick="filterAttractions('phetchaburi')">เพชรบุรี</button>
+      </div>
+
+      <!-- Admin Create Controls -->
+      <div class="admin-controls" id="admin-attraction-controls">
+        <button class="admin-btn-add" onclick="openAddModal('attraction')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          เพิ่มสถานที่ท่องเที่ยวใหม่
+        </button>
+      </div>
+
+      <div class="attraction-grid" id="attraction-grid">
+        <!-- Rendered Dynamically from app.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Cost Estimator Calculator Section -->
+  <section class="section-padding" id="estimator" style="background-color: var(--bg-white)">
+    <div class="container">
+      <h2 class="section-title">คำนวณค่าใช้จ่ายเบื้องต้น</h2>
+      <p class="section-subtitle">ประเมินงบประมาณการเช่ารถทัวร์ด้วยระบบอัตโนมัติ สะดวก รวดเร็ว ทราบราคาได้ทันที</p>
+      
+      <div class="calc-container">
+        <!-- Input Form -->
+        <div class="calc-form">
+          <div class="calc-header-block">
+            <h3 class="calc-section-title">ระบุรายละเอียดการเดินทาง</h3>
+            <button class="admin-lock-btn" onclick="openAdminSettings()" title="ตั้งค่าระบบโดย Admin">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              <span>ตั้งค่าระบบหลังบ้าน</span>
+            </button>
+          </div>
+          
+          <form id="cost-calc-form">
+            <!-- Distance Input -->
+            <div class="form-group">
+              <label class="form-label" for="calc-distance">
+                ระยะทางไป-กลับโดยประมาณ
+                <span>(ค่าน้ำมัน กิโลเมตรละ <span id="display-fuel-rate">15</span> บาท)</span>
+              </label>
+              <div class="input-with-unit">
+                <input class="form-input" type="number" id="calc-distance" placeholder="ระบุจำนวนกิโลเมตร" min="0" required>
+                <span class="input-unit">กิโลเมตร</span>
+              </div>
+            </div>
+
+            <!-- Operation Days Input -->
+            <div class="form-group">
+              <label class="form-label" for="calc-days">
+                จำนวนวันเดินทาง
+                <span>(ค่าดำเนินการวันละ <span id="display-day-rate">3,000</span> บาท)</span>
+              </label>
+              <div class="input-with-unit">
+                <input class="form-input" type="number" id="calc-days" placeholder="ระบุจำนวนวัน" min="0" required>
+                <span class="input-unit">วัน</span>
+              </div>
+            </div>
+
+            <!-- Overnight Stay Input -->
+            <div class="form-group">
+              <label class="form-label" for="calc-nights">
+                จำนวนคืนที่ค้างคืน (ถ้ามี)
+                <span>(ค่าบริการพักค้างคืนละ <span id="display-overnight-rate">2,000</span> บาท)</span>
+              </label>
+              <div class="input-with-unit">
+                <input class="form-input" type="number" id="calc-nights" placeholder="ระบุจำนวนคืนค้างแรม (ระบุ 0 หากไปเช้าเย็นกลับ)" min="0" value="0" required>
+                <span class="input-unit">คืน</span>
+              </div>
+            </div>
+
+            <button type="submit" class="calc-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              คำนวณราคาประเมินเบื้องต้น
+            </button>
+          </form>
+        </div>
+
+        <!-- Result / Output Breakdown -->
+        <div class="calc-result-pane">
+          <div>
+            <h3 class="result-header">ผลการประเมินราคา</h3>
+            <div class="result-total-box">
+              <div class="result-total-label">ประมาณการค่าใช้จ่ายรวม</div>
+              <div class="result-total-val"><span id="result-total-value">0</span><span>บาท</span></div>
+            </div>
+            
+            <div class="calc-breakdown">
+              <div class="breakdown-row">
+                <span class="breakdown-label" id="breakdown-fuel-desc">ค่าน้ำมัน (0 กม. × 15 บาท)</span>
+                <span class="breakdown-value" id="breakdown-fuel-val">0 บาท</span>
+              </div>
+              <div class="breakdown-row">
+                <span class="breakdown-label" id="breakdown-day-desc">ค่าดำเนินการ (0 วัน × 3,000 บาท)</span>
+                <span class="breakdown-value" id="breakdown-day-val">0 บาท</span>
+              </div>
+              <div class="breakdown-row">
+                <span class="breakdown-label" id="breakdown-night-desc">ค่าพักค้างคืน (0 คืน × 2,000 บาท)</span>
+                <span class="breakdown-value" id="breakdown-night-val">0 บาท</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="calc-disclaimer">
+            ⚠️ <strong>หมายเหตุ:</strong> ตัวเลขนี้เป็นเพียงการประมาณการค่าใช้จ่ายเบื้องต้นเท่านั้น โปรดติดต่อบริษัทเพื่อคำนวณค่าใช้จ่ายจริงและเสนอราคาที่เหมาะสมที่สุดสำหรับท่านผ่านทางช่องทางการติดต่อของ <strong>เมืองโอ่งทัวร์</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="section-padding" id="contact">
+    <div class="container">
+      <h2 class="section-title">ช่องทางการติดต่อ</h2>
+      <p class="section-subtitle">หากมีคำถาม ต้องการใบเสนอราคา หรือจองทัวร์ สามารถติดต่อทีมงานเมืองโอ่งทัวร์ได้ทุกวัน ตลอด 24 ชั่วโมง</p>
+      
+      <div class="contact-container">
+        <!-- Contact Information Details -->
+        <div class="contact-info-block">
+          <div class="contact-header">
+            <h3 class="contact-title">ห้างหุ้นส่วนจำกัด เมืองโอ่งทัวร์</h3>
+            <p class="contact-desc">ยินดีให้บริการรถบัสปรับอากาศให้เช่าเหมาคัน ท่องเที่ยวทั่วประเทศ บริการในเขตจังหวัดราชบุรี และพื้นที่ใกล้เคียง</p>
+          </div>
+          
+          <div class="contact-channels">
+            <!-- Channel: Phone Number -->
+            <div class="channel-item">
+              <div class="channel-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+              </div>
+              <div class="channel-details">
+                <span class="channel-label">เบอร์โทรศัพท์ติดต่อสายตรง</span>
+                <span class="channel-val" id="contact-phone-text">081-8805804</span>
+                <a href="tel:081-8805804" class="channel-link" id="contact-phone-link">โทรออกทันที</a>
+              </div>
+            </div>
+
+            <!-- Channel: Facebook -->
+            <div class="channel-item">
+              <div class="channel-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </div>
+              <div class="channel-details">
+                <span class="channel-label">เฟซบุ๊กแฟนเพจ (Facebook)</span>
+                <span class="channel-val" id="contact-fb-text">เมืองโอ่งทัวร์</span>
+                <a href="https://www.facebook.com/profile.php?id=100072559092496" target="_blank" class="channel-link" id="contact-fb-link">เปิดแอปเฟซบุ๊ก ↗</a>
+              </div>
+            </div>
+
+            <!-- Channel: Address -->
+            <div class="channel-item">
+              <div class="channel-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <div class="channel-details">
+                <span class="channel-label">สำนักงานบริการ</span>
+                <span class="channel-val" id="contact-address-text">อำเภอเมืองราชบุรี จังหวัดราชบุรี 70000</span>
+              </div>
+            </div>
+          </div>
+          
+          <p class="contact-desc" style="font-size:0.85rem">เลขทะเบียนพาณิชย์และมาตรฐานการขนส่งสาธารณะถูกต้องครบถ้วน วิ่งรถประหยัด ปลอดภัย พนักงานขับมีใบอนุญาตขับขี่สาธารณะถูกต้อง</p>
+        </div>
+
+        <!-- Embedded Google Maps Linked to "เมืองโอ่งทัวร์" -->
+        <div class="contact-map-block">
+          <iframe 
+            id="contact-map-iframe"
+            src="https://maps.google.com/maps?q=เมืองโอ่งทัวร์%20ราชบุรี&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 <span>เมืองโอ่งทัวร์ (ราชบุรี)</span>. สงวนลิขสิทธิ์ทั้งหมด</p>
+      <p style="font-size:0.8rem; opacity:0.6">การบริการประทับใจ ปลอดภัย สะดวกสบาย ตลอดเส้นทางท่องเที่ยว</p>
+    </div>
+  </footer>
+
+  <!-- Modal 1: Bus Specification Details -->
+  <div class="modal-overlay" id="bus-details-modal">
+    <div class="modal-window">
+      <button class="modal-close-btn" aria-label="Close modal">✕</button>
+      
+      <!-- Bus Image Slider / Hero -->
+      <div class="modal-bus-gallery">
+        <img id="modal-bus-img" src="" alt="Bus Closeup Image">
+      </div>
+      
+      <div class="modal-bus-content">
+        <div class="modal-bus-header">
+          <h3 class="modal-bus-title" id="modal-bus-title">รายละเอียดรถบัส</h3>
+          <p class="modal-bus-desc" id="modal-bus-desc">คำอธิบายรายละเอียด</p>
+        </div>
+        
+        <!-- Specs Table -->
+        <table class="specs-table">
+          <tr>
+            <th>จำนวนที่นั่ง (Seats)</th>
+            <td id="spec-val-seats">-</td>
+          </tr>
+          <tr>
+            <th>ยี่ห้อแชสซี / ตัวถัง (Brand)</th>
+            <td id="spec-val-brand">-</td>
+          </tr>
+          <tr>
+            <th>ข้อมูลเครื่องยนต์ (Engine)</th>
+            <td id="spec-val-engine">-</td>
+          </tr>
+          <tr>
+            <th>อุปกรณ์ความปลอดภัย</th>
+            <td>มีเข็มขัดนิรภัยทุกที่นั่ง, ทางออกฉุกเฉิน 2 จุด, ถังดับเพลิงเคมี, ค้อนทุบกระจกนิรภัย</td>
+          </tr>
+          <tr>
+            <th>สิ่งอำนวยความสะดวก</th>
+            <td>เครื่องเสียง VIP คาราโอเกะ, ไมโครโฟนไร้สาย, จอทีวี LED ขนาดใหญ่, ช่องเสียบชาร์จ USB โทรศัพท์มือถือทุกที่นั่ง, ระบบปรับอากาศอัตโนมัติแยกจุด</td>
+          </tr>
+        </table>
+        
+        <div style="display:flex; justify-content:flex-end">
+          <a href="#estimator" class="btn btn-primary" onclick="closeModal('bus-details-modal')">ใช้คันนี้คำนวณราคาประเมิน</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Admin Login / Rates Settings Configurator -->
+  <div class="modal-overlay" id="admin-modal">
+    <div class="modal-window" style="max-width:550px">
+      <button class="modal-close-btn" aria-label="Close modal">✕</button>
+      
+      <div class="admin-modal-content">
+        <!-- Auth Section first -->
+        <div id="admin-auth-section">
+          <div class="admin-modal-title">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24" style="color:var(--accent)">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            <span>ลงชื่อเข้าใช้ผู้ดูแลระบบ</span>
+          </div>
+          <p class="admin-modal-desc">กรุณาระบุรหัสผ่านของระบบเพื่อเข้าใช้งานแผงควบคุมหลังบ้านและแก้ไขค่าบริการ</p>
+          
+          <form id="admin-auth-form">
+            <div class="auth-block">
+              <input class="auth-input" type="password" id="admin-password" placeholder="ใส่รหัสผ่านแอดมิน" required autofocus>
+              <div>
+                <button type="submit" class="auth-btn">ยืนยันรหัสผ่าน</button>
+              </div>
+              <div class="auth-error-msg" id="auth-error-msg">❌ รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง</div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Settings Section (hidden by default, now accessible when logged in) -->
+        <div id="admin-settings-section" style="display:none">
+          <div class="admin-modal-title">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24" style="color:var(--accent)">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span>ตั้งค่าระบบหลังบ้าน (Admin Settings)</span>
+          </div>
+          <p class="admin-modal-desc">ผู้ดูแลระบบสามารถแก้ไขราคาประเมินและช่องทางการติดต่อของเว็บไซต์ได้จากส่วนนี้</p>
+          
+          <form id="admin-rates-form">
+            <!-- Part 1: Rates Config -->
+            <h4 style="margin: 15px 0 10px; color: var(--accent); border-bottom: 1px dashed #cbd5e1; padding-bottom: 5px;">🔧 อัตราค่าบริการประเมินราคา</h4>
+            
+            <div class="form-group">
+              <label class="form-label" for="admin-fuel-rate">ค่าน้ำมันต่อกิโลเมตร</label>
+              <div class="input-with-unit">
+                <input class="form-input" type="number" id="admin-fuel-rate" min="0" required>
+                <span class="input-unit">บาท / กม.</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="admin-day-rate">ค่าดำเนินการต่อวัน</label>
+              <div class="input-with-unit">
+                <input class="form-input" type="number" id="admin-day-rate" min="0" required>
+                <span class="input-unit">บาท / วัน</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="admin-overnight-rate">ค่าค้างคืนพนักงานและรถ (ต่อคืน)</label>
+              <div class="input-with-unit">
+                <input class="form-input" type="number" id="admin-overnight-rate" min="0" required>
+                <span class="input-unit">บาท / คืน</span>
+              </div>
+            </div>
+
+            <!-- Part 2: Contact Channels Config -->
+            <h4 style="margin: 25px 0 10px; color: var(--accent); border-bottom: 1px dashed #cbd5e1; padding-bottom: 5px;">📞 ข้อมูลช่องทางการติดต่อ</h4>
+
+            <div class="form-group">
+              <label class="form-label" for="admin-contact-phone">เบอร์โทรศัพท์ติดต่อ</label>
+              <input class="form-input" type="text" id="admin-contact-phone" placeholder="เช่น 081-8805804" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="admin-contact-fb-name">ชื่อแฟนเพจ Facebook</label>
+              <input class="form-input" type="text" id="admin-contact-fb-name" placeholder="เช่น เมืองโอ่งทัวร์" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="admin-contact-fb-link">ลิงก์หน้าเพจ Facebook (URL)</label>
+              <input class="form-input" type="text" id="admin-contact-fb-link" placeholder="เช่น https://www.facebook.com/..." required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="admin-contact-address">ที่อยู่สำนักงาน</label>
+              <input class="form-input" type="text" id="admin-contact-address" placeholder="ระบุที่อยู่สำนักงานบริการ" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="admin-contact-map-query">จุดค้นหาบนแผนที่ Google Maps (ชื่อธุรกิจ/พิกัด)</label>
+              <input class="form-input" type="text" id="admin-contact-map-query" placeholder="เช่น เมืองโอ่งทัวร์ ราชบุรี" required>
+            </div>
+
+            <button type="submit" class="admin-save-btn">บันทึกข้อมูลการตั้งค่าทั้งหมด</button>
+          </form>
+
+          <!-- Sync to Cloud Container -->
+          <div style="margin-top: 20px; border-top: 1px dashed #cbd5e1; padding-top: 20px; text-align: center;">
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">ต้องการซิงค์ข้อมูลจากเบราว์เซอร์เครื่องนี้ขึ้น Cloud Database หรือไม่?</p>
+            <button type="button" class="admin-save-btn" style="background-color: var(--primary); color: var(--text-light); margin-top: 0;" onclick="forceCloudSync()">☁️ ซิงค์ข้อมูลเครื่องนี้ขึ้นคลาวด์ (Sync to Cloud)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: CRUD Editor Modal for dynamic content addition/modification -->
+  <div class="modal-overlay" id="crud-modal">
+    <div class="modal-window" style="max-width:550px">
+      <button class="modal-close-btn" aria-label="Close modal">✕</button>
+      
+      <div class="admin-modal-content">
+        <div class="admin-modal-title">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24" style="color:var(--accent)">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          <span id="crud-modal-title">จัดการข้อมูล</span>
+        </div>
+        <p class="admin-modal-desc" id="crud-modal-desc">อัปโหลดรูปภาพพร้อมระบุรายละเอียดต่างๆ ให้ครบถ้วนเพื่อทำการบันทึก</p>
+        
+        <form id="crud-editor-form">
+          <!-- Hidden inputs for type and item identity -->
+          <input type="hidden" id="crud-item-type">
+          <input type="hidden" id="crud-item-id">
+          
+          <!-- Field: Title / Name -->
+          <div class="form-group">
+            <label class="form-label" for="crud-field-title" id="crud-label-title">หัวข้อ / ชื่อ</label>
+            <input class="form-input" type="text" id="crud-field-title" required>
+          </div>
+
+          <!-- Field: Description -->
+          <div class="form-group">
+            <label class="form-label" for="crud-field-desc" id="crud-label-desc">คำอธิบาย</label>
+            <textarea class="form-input" id="crud-field-desc" rows="4" style="font-family:inherit; resize:vertical" required></textarea>
+          </div>
+
+          <!-- Extra Field A (Dynamic) -->
+          <div class="form-group" id="crud-group-a">
+            <label class="form-label" for="crud-field-a" id="crud-label-a">ฟิลด์เฉพาะ A</label>
+            <input class="form-input" type="text" id="crud-field-a">
+          </div>
+
+          <!-- Extra Field B (Dynamic) -->
+          <div class="form-group" id="crud-group-b">
+            <label class="form-label" for="crud-field-b" id="crud-label-b">ฟิลด์เฉพาะ B</label>
+            <input class="form-input" type="text" id="crud-field-b">
+          </div>
+
+          <!-- Extra Field C (Dynamic) -->
+          <div class="form-group" id="crud-group-c">
+            <label class="form-label" for="crud-field-c" id="crud-label-c">ฟิลด์เฉพาะ C</label>
+            <input class="form-input" type="text" id="crud-field-c">
+          </div>
+
+          <!-- Native File Upload and Preview Area -->
+          <div class="form-group" style="border: 1px solid #e2e8f0; padding: 15px; border-radius: var(--border-radius-sm); background-color: #f8fafc;">
+            <label class="form-label" for="crud-field-file">เลือกไฟล์รูปภาพเพื่ออัปโหลด</label>
+            <input class="form-input" type="file" id="crud-field-file" accept="image/*" style="padding: 8px; margin-bottom: 12px; font-size: 0.95rem;">
+            
+            <div id="crud-img-preview-container" style="display: none; text-align: center; background-color: var(--bg-white); padding: 15px; border-radius: var(--border-radius-sm); border: 2px dashed #cbd5e1; position: relative; margin-top: 10px;">
+              <span style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 8px; font-weight: 500;">ภาพตัวอย่างที่เลือก:</span>
+              <img id="crud-img-preview" src="" alt="Preview" style="max-height: 180px; max-width: 100%; margin: 0 auto; border-radius: 4px; display: block; object-fit: contain;">
+              <button type="button" onclick="clearSelectedFile()" style="position: absolute; top: 10px; right: 10px; background-color: var(--danger); color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: 600;">ลบภาพ</button>
+            </div>
+            
+            <!-- Hidden input to store resulting Base64 string -->
+            <input type="hidden" id="crud-field-image">
+          </div>
+
+          <button type="submit" class="admin-save-btn">บันทึกข้อมูลและเผยแพร่</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
