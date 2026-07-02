@@ -1200,6 +1200,33 @@ async function deleteItem(type, id) {
   alert("ทำการลบข้อมูลเรียบร้อยแล้ว!");
 }
 
+// Increment visitor counter from cloud (or localStorage if local)
+async function incrementVisitorCount() {
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const visitorCountEl = document.getElementById('visitor-count');
+  if (!visitorCountEl) return;
+  
+  if (isLocal) {
+    let localCount = localStorage.getItem('mot_local_visits');
+    let count = localCount ? parseInt(localCount, 10) : 0;
+    count += 1;
+    localStorage.setItem('mot_local_visits', count.toString());
+    visitorCountEl.textContent = formatNumber(count);
+  } else {
+    try {
+      const response = await fetch('/api/visit');
+      if (response.ok) {
+        const json = await response.json();
+        if (json && json.count) {
+          visitorCountEl.textContent = formatNumber(json.count);
+        }
+      }
+    } catch (e) {
+      console.warn("Failed to load visitor counter:", e);
+    }
+  }
+}
+
 /* ==========================================================================
    INITIALIZATION & ACTIONS listeners
    ========================================================================== */
@@ -1207,6 +1234,9 @@ async function deleteItem(type, id) {
 document.addEventListener('DOMContentLoaded', () => {
   // Init App data layer (async database load)
   initApp();
+  
+  // Increment visitor count
+  incrementVisitorCount();
   
   // Header scroll class toggle
   window.addEventListener('scroll', () => {
