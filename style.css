@@ -219,6 +219,15 @@ header.scrolled .navbar {
   box-shadow: 0 0 15px rgba(217, 119, 6, 0.4);
 }
 
+.logo-img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 15px rgba(217, 119, 6, 0.4);
+}
+
 .logo-text {
   display: flex;
   flex-direction: column;
