@@ -345,7 +345,7 @@ body.admin-active .nav-admin-link:hover {
 .hero-content {
   position: relative;
   z-index: 2;
-  max-width: 650px;
+  max-width: 950px;
 }
 
 .hero-tag {
@@ -362,12 +362,13 @@ body.admin-active .nav-admin-link:hover {
 }
 
 .hero-title {
-  font-size: 3.5rem;
+  font-size: 4.2rem;
   font-weight: 700;
   line-height: 1.2;
   margin-bottom: 20px;
   animation: fadeInUp 1s ease;
   text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  white-space: nowrap;
 }
 
 .hero-title span {
@@ -1451,6 +1452,7 @@ footer span {
 @media (max-width: 992px) {
   .hero-title {
     font-size: 2.8rem;
+    white-space: normal;
   }
   
   .calc-container {
@@ -1533,6 +1535,7 @@ footer span {
   
   .hero-title {
     font-size: 2.2rem;
+    white-space: normal;
   }
   
   .hero-desc {
