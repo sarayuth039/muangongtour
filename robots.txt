@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://muang-ong-tour.com/sitemap.xml
