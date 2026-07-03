@@ -909,7 +909,81 @@ function viewBusDetails(busId) {
   document.getElementById('spec-val-brand').textContent = bus.brand;
   document.getElementById('spec-val-engine').textContent = bus.engine;
   
+  // Render additional photos gallery
+  const extraGallery = document.getElementById('modal-bus-extra-gallery');
+  const extraImagesContainer = document.getElementById('modal-bus-extra-images');
+  if (extraGallery && extraImagesContainer) {
+    extraImagesContainer.innerHTML = '';
+    if (bus.extraImages && bus.extraImages.length > 0) {
+      extraGallery.style.display = 'block';
+      
+      // Also add the main cover image as the first thumbnail to allow toggling back to it!
+      const coverThumb = document.createElement('img');
+      coverThumb.src = bus.image;
+      coverThumb.style.cssText = 'width: calc(20% - 7px); max-height: 60px; object-fit: cover; border-radius: 4px; border: 2px solid var(--accent); cursor: pointer;';
+      coverThumb.onclick = () => {
+        document.getElementById('modal-bus-img').src = bus.image;
+        // Highlight active thumbnail
+        Array.from(extraImagesContainer.children).forEach(child => child.style.borderColor = '#cbd5e1');
+        coverThumb.style.borderColor = 'var(--accent)';
+      };
+      extraImagesContainer.appendChild(coverThumb);
+
+      bus.extraImages.forEach(imgData => {
+        const thumb = document.createElement('img');
+        thumb.src = imgData;
+        thumb.style.cssText = 'width: calc(20% - 7px); max-height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1; cursor: pointer;';
+        thumb.onclick = () => {
+          document.getElementById('modal-bus-img').src = imgData;
+          // Highlight active thumbnail
+          Array.from(extraImagesContainer.children).forEach(child => child.style.borderColor = '#cbd5e1');
+          thumb.style.borderColor = 'var(--accent)';
+        };
+        extraImagesContainer.appendChild(thumb);
+      });
+    } else {
+      extraGallery.style.display = 'none';
+    }
+  }
+  
   openModal('bus-details-modal');
+}
+
+// Render dynamic thumbnails of additional bus photos with delete buttons in the editor modal
+function renderCrudBusExtraPreviews() {
+  const container = document.getElementById('crud-bus-extra-preview-container');
+  const jsonInput = document.getElementById('crud-bus-extra-images-json');
+  if (!container || !jsonInput) return;
+  container.innerHTML = '';
+  
+  let extraImages = [];
+  try {
+    extraImages = JSON.parse(jsonInput.value || '[]');
+  } catch (e) {
+    extraImages = [];
+  }
+  
+  extraImages.forEach((imgData, index) => {
+    const itemDiv = document.createElement('div');
+    itemDiv.style.cssText = 'position: relative; width: 60px; height: 60px; border: 1px solid #cbd5e1; border-radius: 4px; overflow: hidden;';
+    
+    const img = document.createElement('img');
+    img.src = imgData;
+    img.style.cssText = 'width: 100%; height: 100%; object-fit: cover;';
+    itemDiv.appendChild(img);
+    
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.innerHTML = '✕';
+    delBtn.style.cssText = 'position: absolute; top: 2px; right: 2px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 16px; height: 16px; font-size: 0.65rem; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; line-height: 1;';
+    delBtn.onclick = () => {
+      extraImages.splice(index, 1);
+      jsonInput.value = JSON.stringify(extraImages);
+      renderCrudBusExtraPreviews();
+    };
+    itemDiv.appendChild(delBtn);
+    container.appendChild(itemDiv);
+  });
 }
 
 // Filter tourism attractions by province tabs
@@ -996,6 +1070,13 @@ function openAddModal(type) {
   configureCrudFormFields(type);
   clearSelectedFile();
   
+  // Clear extra photos inputs for bus
+  const extraFileInput = document.getElementById('crud-bus-extra-file');
+  const extraJsonInput = document.getElementById('crud-bus-extra-images-json');
+  if (extraFileInput) extraFileInput.value = '';
+  if (extraJsonInput) extraJsonInput.value = '[]';
+  renderCrudBusExtraPreviews();
+  
   document.getElementById('crud-field-title').value = '';
   document.getElementById('crud-field-desc').value = '';
   document.getElementById('crud-field-a').value = '';
@@ -1049,6 +1130,13 @@ function openEditModal(type, id) {
     document.getElementById('crud-field-a').value = item.seats;
     document.getElementById('crud-field-b').value = item.brand;
     document.getElementById('crud-field-c').value = item.engine;
+    
+    // Load extra images
+    const extraFileInput = document.getElementById('crud-bus-extra-file');
+    const extraJsonInput = document.getElementById('crud-bus-extra-images-json');
+    if (extraFileInput) extraFileInput.value = '';
+    if (extraJsonInput) extraJsonInput.value = JSON.stringify(item.extraImages || []);
+    renderCrudBusExtraPreviews();
   } else if (type === 'portfolio') {
     document.getElementById('crud-field-a').value = item.date;
     document.getElementById('crud-field-b').value = item.type;
@@ -1072,6 +1160,11 @@ function configureCrudFormFields(type) {
   groupA.style.display = 'block';
   groupB.style.display = 'block';
   groupC.style.display = 'block';
+  
+  const busExtraGroup = document.getElementById('crud-bus-extra-photos-group');
+  if (busExtraGroup) {
+    busExtraGroup.style.display = (type === 'bus') ? 'block' : 'none';
+  }
   
   if (type === 'bus') {
     document.getElementById('crud-label-title').textContent = "ชื่อรุ่น / ประเภทรถบัส";
@@ -1138,6 +1231,14 @@ async function saveCrudItem(event) {
   
   let item = {};
   if (type === 'bus') {
+    const extraImagesJson = document.getElementById('crud-bus-extra-images-json').value;
+    let extraImages = [];
+    try {
+      extraImages = JSON.parse(extraImagesJson || '[]');
+    } catch (e) {
+      extraImages = [];
+    }
+
     item = {
       id: id || "bus_" + Date.now().toString(),
       title,
@@ -1145,7 +1246,8 @@ async function saveCrudItem(event) {
       image,
       seats: fieldA,
       brand: fieldB,
-      engine: fieldC
+      engine: fieldC,
+      extraImages: extraImages
     };
   } else if (type === 'portfolio') {
     item = {
@@ -1323,6 +1425,51 @@ document.addEventListener('DOMContentLoaded', () => {
             previewContainer.style.display = 'block';
           }
         });
+      }
+    });
+  }
+
+  // Bus extra files upload change listener (Compresses multiple files to Base64)
+  const busExtraInput = document.getElementById('crud-bus-extra-file');
+  if (busExtraInput) {
+    busExtraInput.addEventListener('change', (e) => {
+      const files = Array.from(e.target.files);
+      const jsonInput = document.getElementById('crud-bus-extra-images-json');
+      if (!jsonInput) return;
+      
+      let currentImages = [];
+      try {
+        currentImages = JSON.parse(jsonInput.value || '[]');
+      } catch (e) {
+        currentImages = [];
+      }
+      
+      // Calculate how many more files we can add (max 5)
+      const remainingSlots = 5 - currentImages.length;
+      if (remainingSlots <= 0) {
+        alert("คุณสามารถอัปโหลดรูปภาพเพิ่มเติมได้สูงสุด 5 รูปครับ (กรุณาลบรูปภาพเดิมออกก่อน)");
+        busExtraInput.value = '';
+        return;
+      }
+      
+      const filesToProcess = files.slice(0, remainingSlots);
+      let processedCount = 0;
+      
+      filesToProcess.forEach(file => {
+        compressAndConvertToBase64(file, (base64Str) => {
+          currentImages.push(base64Str);
+          processedCount++;
+          
+          if (processedCount === filesToProcess.length) {
+            jsonInput.value = JSON.stringify(currentImages);
+            renderCrudBusExtraPreviews();
+            busExtraInput.value = ''; // Reset input selection
+          }
+        });
+      });
+      
+      if (files.length > remainingSlots) {
+        alert(`เลือกไฟล์เกินขีดจำกัด! ระบบนำรูปใส่ให้เฉพาะ ${remainingSlots} รูปแรกเพื่อให้ครบ 5 รูปสูงสุดครับ`);
       }
     });
   }

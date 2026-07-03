@@ -367,6 +367,15 @@
           </tr>
         </table>
         
+        <!-- Bus Additional Images Gallery -->
+        <div id="modal-bus-extra-gallery" style="margin: 20px 0 25px; display: none;">
+          <h4 style="font-size: 0.95rem; color: var(--accent); margin-bottom: 10px; border-bottom: 1px dashed #cbd5e1; padding-bottom: 5px; font-weight: 600;">📷 ภาพถ่ายเพิ่มเติมภายในและภายนอกรถ</h4>
+          <div id="modal-bus-extra-images" style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-start;">
+            <!-- Rendered Dynamically from app.js -->
+          </div>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; font-style: italic;">* สามารถคลิกที่รูปภาพเพื่อขยายดูเป็นภาพใหญ่ด้านบนได้ครับ</p>
+        </div>
+        
         <div style="display:flex; justify-content:flex-end">
           <a href="#estimator" class="btn btn-primary" onclick="closeModal('bus-details-modal')">ใช้คันนี้คำนวณราคาประเมิน</a>
         </div>
@@ -546,12 +555,26 @@
             <input type="hidden" id="crud-field-image">
           </div>
 
+          <!-- Additional Photos Container (visible only when type is 'bus') -->
+          <div class="form-group" id="crud-bus-extra-photos-group" style="display: none; border: 1px solid #e2e8f0; padding: 15px; border-radius: var(--border-radius-sm); background-color: #f8fafc; margin-top: 15px;">
+            <label class="form-label" style="font-weight: 600; color: var(--primary);">📷 ภาพถ่ายเพิ่มเติมของรถบัส (สูงสุด 5 รูป)</label>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">คุณสามารถเลือกอัปโหลดรูปภาพภายในรถ เบาะที่นั่ง คอนโซลหน้ารถ หรือมุมอื่นๆ เพื่อให้ลูกค้ากดดูในอัลบั้มได้</p>
+            
+            <input class="form-input" type="file" id="crud-bus-extra-file" accept="image/*" multiple style="padding: 8px; margin-bottom: 12px; font-size: 0.95rem;">
+            
+            <div id="crud-bus-extra-preview-container" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;">
+              <!-- Rendered dynamically from app.js -->
+            </div>
+            <!-- Hidden input to store extra images as JSON array -->
+            <input type="hidden" id="crud-bus-extra-images-json">
+          </div>
+
           <button type="submit" class="admin-save-btn">บันทึกข้อมูลและเผยแพร่</button>
         </form>
       </div>
     </div>
   </div>
 
-  <script src="app.js?v=1.4"></script>
+  <script src="app.js?v=1.5"></script>
 </body>
 </html>
