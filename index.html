@@ -472,9 +472,10 @@
           </form>
 
           <!-- Sync to Cloud Container -->
-          <div style="margin-top: 20px; border-top: 1px dashed #cbd5e1; padding-top: 20px; text-align: center;">
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">ต้องการซิงค์ข้อมูลจากเบราว์เซอร์เครื่องนี้ขึ้น Cloud Database หรือไม่?</p>
-            <button type="button" class="admin-save-btn" style="background-color: var(--primary); color: var(--text-light); margin-top: 0;" onclick="forceCloudSync()">☁️ ซิงค์ข้อมูลเครื่องนี้ขึ้นคลาวด์ (Sync to Cloud)</button>
+          <div style="margin-top: 20px; border-top: 1px dashed #cbd5e1; padding-top: 20px; text-align: center; display: flex; flex-direction: column; gap: 10px; align-items: center;">
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px;">จัดการการเชื่อมข้อมูลคลาวด์ (Cloud Sync)</p>
+            <button type="button" class="admin-save-btn" style="background-color: var(--primary); color: var(--text-light); margin-top: 0; width: 100%;" onclick="forceCloudSync()">☁️ ซิงค์ข้อมูลเครื่องนี้ขึ้นคลาวด์ (Sync to Cloud)</button>
+            <button type="button" class="admin-save-btn" style="background-color: #475569; color: var(--text-light); margin-top: 0; width: 100%;" onclick="recoverFromLocalStorage()">🔄 กู้คืนข้อมูลประวัติเก่าจากเครื่องนี้ (Restore Local Backup)</button>
           </div>
         </div>
       </div>

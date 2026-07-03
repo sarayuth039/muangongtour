@@ -263,6 +263,46 @@ async function forceCloudSync() {
   }
 }
 
+// Restore local backup data from this browser's localStorage and sync it up to Cloud
+async function recoverFromLocalStorage() {
+  const confirmRestore = confirm("คุณต้องการดึงข้อมูลผลงาน/รถบัสทั้งหมดที่เก็บบันทึกสำรองไว้ในเบราว์เซอร์เครื่องนี้ เพื่อกู้คืนและเขียนทับข้อมูลบนคลาวด์หรือไม่?\n\n⚠️ คำเตือน: ข้อมูลที่มีอยู่บนคลาวด์จะถูกแทนที่ด้วยข้อมูลสำรองของเครื่องนี้ทันที");
+  if (!confirmRestore) return;
+
+  const storedPortfolio = localStorage.getItem('mot_portfolio');
+  const storedBuses = localStorage.getItem('mot_buses');
+  const storedRates = localStorage.getItem('mot_rates');
+  const storedContact = localStorage.getItem('mot_contact');
+  const storedAttractions = localStorage.getItem('mot_attractions');
+
+  if (!storedPortfolio && !storedBuses) {
+    alert("❌ ไม่พบข้อมูลเก่าที่เคยทำไว้ในเบราว์เซอร์ของเครื่องนี้ครับ");
+    return;
+  }
+
+  try {
+    if (storedRates) appData.rates = JSON.parse(storedRates);
+    if (storedContact) appData.contact = JSON.parse(storedContact);
+    if (storedBuses) appData.buses = JSON.parse(storedBuses);
+    if (storedPortfolio) appData.portfolio = JSON.parse(storedPortfolio);
+    if (storedAttractions) appData.attractions = JSON.parse(storedAttractions);
+
+    // Save and sync to Cloud
+    await persistState();
+
+    // Re-render UI
+    updateDisplayedRates();
+    renderContactInfo();
+    renderBuses();
+    renderPortfolio();
+    renderAttractions();
+    calculateCost();
+
+    alert("🎉 ดึงข้อมูลเก่าที่กู้คืนได้สำเร็จแล้ว และนำส่งขึ้นคลาวด์ให้คุณเรียบร้อยครับ!");
+  } catch (e) {
+    alert("เกิดข้อผิดพลาดในการอ่านข้อมูลสำรอง: " + e.message);
+  }
+}
+
 // Initialize Application Data (Fetches from cloud if on production, else falls back to LocalStorage)
 async function initApp() {
   const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
