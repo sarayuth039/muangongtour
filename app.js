@@ -184,6 +184,7 @@ let appData = {
   attractions: [],
   isAdmin: false,
   activeProvinceFilter: 'all',
+  activeYearFilter: 'all',
   showAllPortfolio: false // show only first 9 portfolio items by default
 };
 
@@ -293,6 +294,7 @@ async function recoverFromLocalStorage() {
     updateDisplayedRates();
     renderContactInfo();
     renderBuses();
+    renderPortfolioYearTabs();
     renderPortfolio();
     renderAttractions();
     calculateCost();
@@ -612,6 +614,7 @@ function setAdminState(isAdminActive) {
   }
   
   renderBuses();
+  renderPortfolioYearTabs();
   renderPortfolio();
   renderAttractions();
 }
@@ -779,8 +782,15 @@ function renderPortfolio() {
     return;
   }
   
+  // Filter by active year tab
+  const filteredPortfolio = appData.portfolio.filter(item => {
+    if (appData.activeYearFilter === 'all') return true;
+    const dateObj = getSafeDateTime(item.date);
+    return dateObj.getFullYear() === appData.activeYearFilter;
+  });
+
   // Sort portfolio items by date descending using the safe time parser
-  const sortedPortfolio = [...appData.portfolio].sort((a, b) => {
+  const sortedPortfolio = [...filteredPortfolio].sort((a, b) => {
     return getSafeDateTime(b.date) - getSafeDateTime(a.date);
   });
   
@@ -849,6 +859,54 @@ function renderPortfolio() {
     }
     toggleContainer.appendChild(button);
   }
+}
+
+// Dynamically count and render Buddhist Era Year Tabs for Portfolio
+function renderPortfolioYearTabs() {
+  const tabsContainer = document.getElementById('portfolio-year-tabs');
+  if (!tabsContainer) return;
+  tabsContainer.innerHTML = '';
+  
+  // Count totals
+  const totalCount = appData.portfolio.length;
+  
+  // Group items by year
+  const yearCounts = {};
+  appData.portfolio.forEach(item => {
+    const dateObj = getSafeDateTime(item.date);
+    const year = dateObj.getFullYear();
+    yearCounts[year] = (yearCounts[year] || 0) + 1;
+  });
+  
+  // Get unique years sorted descending
+  const uniqueYears = Object.keys(yearCounts).map(Number).sort((a, b) => b - a);
+  
+  // Render 'All' Tab
+  const allBtn = document.createElement('button');
+  allBtn.className = 'tab-btn' + (appData.activeYearFilter === 'all' ? ' active' : '');
+  allBtn.textContent = `ทั้งหมด (${totalCount})`;
+  allBtn.onclick = () => filterPortfolioByYear('all');
+  tabsContainer.appendChild(allBtn);
+  
+  // Render each year button (Buddhist Era)
+  uniqueYears.forEach(year => {
+    const thaiYear = year + 543;
+    const count = yearCounts[year];
+    
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (appData.activeYearFilter === year ? ' active' : '');
+    btn.textContent = `ปี ${thaiYear} (${count})`;
+    btn.onclick = () => filterPortfolioByYear(year);
+    tabsContainer.appendChild(btn);
+  });
+}
+
+// Filter Portfolio by Year and update UI
+function filterPortfolioByYear(year) {
+  appData.activeYearFilter = year;
+  appData.showAllPortfolio = false;
+  renderPortfolioYearTabs();
+  renderPortfolio();
 }
 
 // 3. Render Attractions
@@ -1182,6 +1240,7 @@ async function saveCrudItem(event) {
     } else {
       appData.portfolio.push(item);
     }
+    renderPortfolioYearTabs();
     renderPortfolio();
   } 
   else if (type === 'attraction') {
@@ -1227,6 +1286,7 @@ async function deleteItem(type, id) {
     if (appData.portfolio.length <= 9) {
       appData.showAllPortfolio = false;
     }
+    renderPortfolioYearTabs();
     renderPortfolio();
   } 
   else if (type === 'attraction') {
