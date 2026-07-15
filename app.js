@@ -195,11 +195,16 @@ const SVG_ICONS = {
 
 // Sync latest state to localStorage (Local fallback backup)
 function syncLocalStorage() {
-  localStorage.setItem('mot_rates', JSON.stringify(appData.rates));
-  localStorage.setItem('mot_contact', JSON.stringify(appData.contact));
-  localStorage.setItem('mot_buses', JSON.stringify(appData.buses));
-  localStorage.setItem('mot_portfolio', JSON.stringify(appData.portfolio));
-  localStorage.setItem('mot_attractions', JSON.stringify(appData.attractions));
+  try {
+    localStorage.setItem('mot_rates', JSON.stringify(appData.rates));
+    localStorage.setItem('mot_contact', JSON.stringify(appData.contact));
+    localStorage.setItem('mot_buses', JSON.stringify(appData.buses));
+    localStorage.setItem('mot_portfolio', JSON.stringify(appData.portfolio));
+    localStorage.setItem('mot_attractions', JSON.stringify(appData.attractions));
+  } catch (e) {
+    console.warn("LocalStorage backup failed due to quota limit:", e);
+    // Ignore error so it doesn't crash the calling sync flow
+  }
 }
 
 // Persist rates, buses, portfolio, attractions to Cloud Database (or Local fallback if localhost)
@@ -1016,8 +1021,8 @@ function compressAndConvertToBase64(file, callback) {
       let width = img.width;
       let height = img.height;
       
-      // Resize to a maximum of 800px width (preserving aspect ratio)
-      const MAX_WIDTH = 800;
+      // Resize to a maximum of 700px width (preserving aspect ratio to save space)
+      const MAX_WIDTH = 700;
       if (width > MAX_WIDTH) {
         height = Math.round((height * MAX_WIDTH) / width);
         width = MAX_WIDTH;
@@ -1029,8 +1034,8 @@ function compressAndConvertToBase64(file, callback) {
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, width, height);
       
-      // Compress to JPEG with 70% quality
-      const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      // Compress to JPEG with 60% quality (cuts down file size significantly)
+      const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.6);
       callback(compressedDataUrl);
     };
     img.src = event.target.result;
@@ -1352,7 +1357,11 @@ async function incrementVisitorCount() {
     let localCount = localStorage.getItem('mot_local_visits');
     let count = localCount ? parseInt(localCount, 10) : 0;
     count += 1;
-    localStorage.setItem('mot_local_visits', count.toString());
+    try {
+      localStorage.setItem('mot_local_visits', count.toString());
+    } catch (e) {
+      console.warn("Failed to save local visits:", e);
+    }
     visitorCountEl.textContent = formatNumber(count);
   } else {
     try {
